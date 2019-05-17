@@ -5,6 +5,6 @@
     <color name="colorAccent">#D81B60</color>
 
     <color name="keyboardBackground">#E0E0E0</color>
-    <color name="keysBackground">#FFFFFF</color>
-    <color name="keysText">#000000</color>
+    <color name="keyBackground">#FFFFFF</color>
+    <color name="keyText">#000000</color>
 </resources>

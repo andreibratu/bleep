@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
           android:keyWidth="10%p"
-          android:horizontalGap="3px"
-          android:verticalGap="3px"
-          android:keyHeight="60dp"
-          android:keyTextColor="@color/colorAccent"
-          android:keyBackground="@color/colorPrimaryDark">
+          android:horizontalGap="6px"
+          android:verticalGap="6px"
+          android:keyHeight="42dp"
+          android:keyTextColor="@color/keyText"
+          android:keyBackground="@color/keyBackground">
+    <Row>
+        <Key android:codes="-7" android:keyLabel="Upload bleep" android:keyWidth="100%p"/>
+    </Row>
     <Row>
         <Key android:codes="49" android:keyLabel="1" android:keyEdgeFlags="left"/>
         <Key android:codes="50" android:keyLabel="2"/>

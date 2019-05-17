@@ -16,6 +16,7 @@ import android.os.Vibrator
 import android.content.Context
 import android.os.VibrationEffect
 import android.os.VibrationEffect.DEFAULT_AMPLITUDE
+import android.widget.Toast
 
 import com.broads.bleep.R
 
@@ -28,6 +29,10 @@ class BleepInputMethodService : InputMethodService(), KeyboardView.OnKeyboardAct
 
     private var am: AudioManager? = null
     private var v: Vibrator? = null
+
+    companion object {
+        const val KEYCODE_SEND_BLEEP = -7
+    }
 
     override fun onCreateInputView(): KeyboardView? {
         keyboardView = View.inflate(this, R.layout.keyboard_view, null) as KeyboardView
@@ -70,6 +75,10 @@ class BleepInputMethodService : InputMethodService(), KeyboardView.OnKeyboardAct
                         KEYCODE_ENTER
                     )
                 )
+                KEYCODE_SEND_BLEEP -> {
+                    Toast.makeText(this, "Bleep sent", Toast.LENGTH_SHORT).show()
+                    // TODO: Add service call for sending a bleep.
+                }
                 else -> {
                     var code = primaryCode.toChar()
                     if (Character.isLetter(code) && caps) {
