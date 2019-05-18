@@ -3,6 +3,7 @@
                                          android:layout_width="match_parent"
                                          android:layout_height="match_parent"
                                          android:id="@+id/keyboard_view"
+                                         android:shadowColor="@android:color/transparent"
                                          android:background="@color/keyboardBackground"
                                          android:keyPreviewLayout="@layout/keyboard_preview"
                                          android:keyBackground="@drawable/normal_key_background"
