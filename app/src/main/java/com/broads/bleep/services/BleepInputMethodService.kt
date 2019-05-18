@@ -1,76 +1,36 @@
 package com.broads.bleep.services
 
+import android.content.ClipDescription
+import android.content.Context
 import android.inputmethodservice.InputMethodService
 import android.inputmethodservice.Keyboard
 import android.inputmethodservice.KeyboardView
-
-import android.view.View
-import android.view.KeyEvent
-import android.view.KeyEvent.KEYCODE_ENTER
-
-import android.text.TextUtils
-
 import android.media.AudioManager
-import android.os.Vibrator
-
-import android.content.Context
-import android.os.Build
 import android.os.VibrationEffect
 import android.os.VibrationEffect.DEFAULT_AMPLITUDE
+import android.os.Vibrator
+import android.support.annotation.Nullable
+import android.support.annotation.RawRes
 import android.support.v13.view.inputmethod.EditorInfoCompat
 import android.support.v13.view.inputmethod.InputConnectionCompat
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputConnection
-import android.widget.EditText
-
-import android.content.ClipDescription
-import android.net.Uri
-
 import android.support.v13.view.inputmethod.InputContentInfoCompat
-import android.view.inputmethod.InputConnection.INPUT_CONTENT_GRANT_READ_URI_PERMISSION
-import android.view.inputmethod.InputContentInfo
+import android.support.v4.content.FileProvider
+import android.text.TextUtils
+import android.view.KeyEvent
+import android.view.KeyEvent.KEYCODE_ENTER
+import android.view.View
+import android.view.inputmethod.EditorInfo
 import com.broads.bleep.R
-import java.io.File
+import java.io.*
 
 
 class BleepInputMethodService : InputMethodService(), KeyboardView.OnKeyboardActionListener {
-    
 
-/*
-    private val editText = object : EditText(this) {
-        override fun onCreateInputConnection(editorInfo: EditorInfo): InputConnection {
-            val ic: InputConnection = super.onCreateInputConnection(editorInfo)
-            EditorInfoCompat.setContentMimeTypes(editorInfo, arrayOf("audio/mp4"))
-
-            val callback = InputConnectionCompat.OnCommitContentListener { inputContentInfo, flags, _ ->
-
-                val lacksPermission = (flags and InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION) != 0
-                // read and display inputContentInfo asynchronously
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1 && lacksPermission) {
-                    try {
-                        inputContentInfo.requestPermission()
-                    } catch (e: Exception) {
-                        return@OnCommitContentListener false
-                    }
-                }
-                true
-            }
-            return InputConnectionCompat.createWrapper(ic, editorInfo, callback)
-        }
-    }*/
-/*
-    fun commitM4PFile(contentUri: Uri, imageDescription: String) {
-        val inputContentInfo = InputContentInfoCompat(contentUri,
-            ClipDescription(imageDescription, arrayOf("audio/mp4")), null)
-        val inputConnection = currentInputConnection
-        val editorInfo = currentInputEditorInfo
-        var flags = 0
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
-            flags = flags or InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION
-        }
-        InputConnectionCompat.commitContent(inputConnection, editorInfo, inputContentInfo, flags, null)
-    }*/
-
+    companion object {
+        const val AUTHORITY = "com.broads.bleep.inputcontent"
+        const val MIME_TYPE_MP4 = "audio/mp4"
+        const val KEYCODE_SEND_BLEEP = -7
+    }
 
     private var keyboardView: KeyboardView? = null
     private var keyboard: Keyboard? = null
@@ -80,9 +40,7 @@ class BleepInputMethodService : InputMethodService(), KeyboardView.OnKeyboardAct
     private var am: AudioManager? = null
     private var v: Vibrator? = null
 
-    companion object {
-        const val KEYCODE_SEND_BLEEP = -7
-    }
+    private var mMp4File: File? = null
 
     override fun onCreateInputView(): KeyboardView? {
         keyboardView = View.inflate(this, R.layout.keyboard_view, null) as KeyboardView
@@ -126,12 +84,9 @@ class BleepInputMethodService : InputMethodService(), KeyboardView.OnKeyboardAct
                     )
                 )
                 KEYCODE_SEND_BLEEP -> {
-
-                    val myUri = Uri.fromFile(File("/app/src/main/res/test.mp4"))
-                    val clipDescription = ClipDescription("anthem", arrayOf("audio/mp4"))
-                    val contentInfo = InputContentInfo(myUri, clipDescription)
-                    inputConnection.commitContent(contentInfo, INPUT_CONTENT_GRANT_READ_URI_PERMISSION, null)
-                    ///commitM4PFile(myUri, "Rusian anthem")
+                    if (isCommitContentSupported(currentInputEditorInfo, MIME_TYPE_MP4)) {
+                        mMp4File?.let { doCommitContent("Russian anthem", MIME_TYPE_MP4, it) }
+                    }
                 }
                 else -> {
                     var code = primaryCode.toChar()
@@ -173,5 +128,112 @@ class BleepInputMethodService : InputMethodService(), KeyboardView.OnKeyboardAct
             Keyboard.KEYCODE_DELETE -> am?.playSoundEffect(AudioManager.FX_KEYPRESS_DELETE)
             else -> am?.playSoundEffect(AudioManager.FX_KEYPRESS_STANDARD)
         }
+    }
+
+    private fun isCommitContentSupported(
+        @Nullable editorInfo: EditorInfo?, mimeType: String
+    ): Boolean {
+        if (editorInfo == null) {
+            return false
+        }
+
+        if (currentInputConnection == null) {
+            return false
+        }
+
+        if (!validatePackageName(editorInfo)) {
+            return false
+        }
+
+        val supportedMimeTypes = EditorInfoCompat.getContentMimeTypes(editorInfo)
+        for (supportedMimeType in supportedMimeTypes) {
+            if (ClipDescription.compareMimeTypes(mimeType, supportedMimeType)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun doCommitContent(
+        description: String, mimeType: String,
+        file: File
+    ) {
+        val editorInfo = currentInputEditorInfo
+
+        // Validate packageName again just in case.
+        if (!validatePackageName(editorInfo)) {
+            return
+        }
+
+        val contentUri = FileProvider.getUriForFile(this, AUTHORITY, file)
+
+        // As you as an IME author are most likely to have to implement your own content provider
+        // to support CommitContent API, it is important to have a clear spec about what
+        // applications are going to be allowed to access the content that your are going to share.
+        val flag: Int = InputConnectionCompat.INPUT_CONTENT_GRANT_READ_URI_PERMISSION
+
+        val inputContentInfoCompat = InputContentInfoCompat(
+            contentUri,
+            ClipDescription(description, arrayOf(mimeType)), null/* linkUrl */
+        )
+        InputConnectionCompat.commitContent(
+            currentInputConnection, currentInputEditorInfo, inputContentInfoCompat,
+            flag, null
+        )
+    }
+
+    private fun validatePackageName(@Nullable editorInfo: EditorInfo?): Boolean {
+        if (editorInfo == null) {
+            return false
+        }
+        if (editorInfo.packageName == null) {
+            return false
+        }
+        return true
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+
+        // TODO: Avoid file I/O in the main thread.
+        val soundsDir = File(filesDir, "sounds")
+        soundsDir.mkdirs()
+        mMp4File = getFileForResource(this, R.raw.mp4_sample, soundsDir, "mp4_sample.mp4")
+    }
+
+    private fun getFileForResource(
+        context: Context, @RawRes res: Int, outputDir: File,
+        filename: String
+    ): File? {
+        val outputFile = File(outputDir, filename)
+        val buffer = ByteArray(4096)
+        var resourceReader: InputStream? = null
+        try {
+            try {
+                resourceReader = context.resources.openRawResource(res)
+                var dataWriter: OutputStream? = null
+                try {
+                    dataWriter = FileOutputStream(outputFile)
+                    while (true) {
+                        val numRead = resourceReader!!.read(buffer)
+                        if (numRead <= 0) {
+                            break
+                        }
+                        dataWriter.write(buffer, 0, numRead)
+                    }
+                    return outputFile
+                } finally {
+                    if (dataWriter != null) {
+                        dataWriter.flush()
+                        dataWriter.close()
+                    }
+                }
+            } finally {
+                resourceReader?.close()
+            }
+        } catch (e: IOException) {
+            return null
+        }
+
     }
 }
