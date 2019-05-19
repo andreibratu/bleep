@@ -12,7 +12,7 @@
                                          android:keyTextColor="@color/keyText"
                                          android:paddingStart="7.75dp"
                                          android:paddingEnd="7.75dp"
-                                         android:paddingTop="52dp"
+                                         android:paddingTop="48dp"
                                          android:paddingBottom="32dp"
                                          android:layout_alignParentBottom="true">
 </android.inputmethodservice.KeyboardView>
