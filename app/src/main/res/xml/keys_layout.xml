@@ -53,9 +53,9 @@
              android:keyWidth="12%p" android:isRepeatable="true" android:horizontalGap="2.7%p" android:keyEdgeFlags="right"/>
     </Row>
     <Row android:rowEdgeFlags="bottom">
-        <Key android:codes="63,33,58" android:keyLabel="!#1" android:keyWidth="14%p" android:horizontalGap="0dp" android:keyEdgeFlags="left"/>
+        <Key android:codes="63,58,41" android:keyLabel="!#1" android:keyWidth="14%p" android:horizontalGap="0dp" android:keyEdgeFlags="left"/>
         <Key android:codes="44" android:keyLabel=","/>
-        <Key android:codes="32" android:keyLabel="SPACE" android:keyWidth="44.75%p" android:isRepeatable="true"/>
+        <Key android:codes="32" android:keyLabel="Space" android:keyWidth="44.75%p" android:isRepeatable="true"/>
         <Key android:codes="46" android:keyLabel="."/>
         <Key android:codes="-4" android:keyBackground="@drawable/special_key" android:keyIcon="@drawable/ic_keyboard_return_black_24dp"
              android:keyWidth="14%p" android:keyEdgeFlags="right"/>

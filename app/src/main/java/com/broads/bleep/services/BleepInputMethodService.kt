@@ -9,13 +9,17 @@ import android.os.VibrationEffect
 import android.os.VibrationEffect.DEFAULT_AMPLITUDE
 import android.os.Vibrator
 import android.support.constraint.ConstraintLayout
+import android.support.constraint.ConstraintSet
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
 import android.view.KeyEvent
 import android.view.KeyEvent.KEYCODE_ENTER
+import android.view.View
 import android.view.inputmethod.ExtractedTextRequest
+import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.TextView
 import com.broads.bleep.R
 import com.broads.bleep.adapters.BleepsRecyclerAdapter
 import com.broads.bleep.entities.Bleep
@@ -44,6 +48,11 @@ class BleepInputMethodService : InputMethodService(), KeyboardView.OnKeyboardAct
 
     private lateinit var bleepsAdapter: BleepsRecyclerAdapter
 
+    private var toggleBleepsViewButton: ImageButton? = null
+
+    private var appNameTextView: TextView? = null
+    private var searchEditText: EditText? = null
+
     override fun onCreateInputView(): ConstraintLayout? {
         containerLayout = ConstraintLayout.inflate(this, R.layout.container_layout, null) as ConstraintLayout
 
@@ -57,10 +66,16 @@ class BleepInputMethodService : InputMethodService(), KeyboardView.OnKeyboardAct
 
         containerLayout?.addView(keyboardView, 0)
 
+        toggleBleepsViewButton = containerLayout?.findViewById(R.id.toggleBleepsViewButton) as ImageButton
+
+        appNameTextView = containerLayout?.findViewById(R.id.appNameTextView) as TextView
+        searchEditText = containerLayout?.findViewById(R.id.searchEditText) as EditText
+
         val toggleBleepsViewButton = containerLayout?.findViewById<ImageButton>(R.id.toggleBleepsViewButton)
         toggleBleepsViewButton?.setOnClickListener { toggleBleepsView() }
 
-        retrieveBleeps()
+        // TODO: Configure the toggleBleepsSearch method properly.
+        // searchEditText?.setOnFocusChangeListener{ _, b -> toggleBleepsSearch(b) }
 
         linearLayoutManager = LinearLayoutManager(this)
         bleepsView?.layoutManager = linearLayoutManager
@@ -135,6 +150,7 @@ class BleepInputMethodService : InputMethodService(), KeyboardView.OnKeyboardAct
     }
 
     private fun retrieveBleeps(vararg params: String?) {
+        bleeps.clear()
         if (params.isEmpty()) {
             // No keywords, filter by popularity
             this.db.collection("bleeps").limit(20).get().addOnSuccessListener { bleepRefs ->
@@ -177,16 +193,69 @@ class BleepInputMethodService : InputMethodService(), KeyboardView.OnKeyboardAct
         when (containerLayout?.getChildAt(0)) {
             is KeyboardView -> {
                 containerLayout?.removeView(keyboardView)
+
                 bleepsView?.layoutParams =
                     keyboardView?.height?.let { RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, it) }
+
+                toggleBleepsViewButton?.setImageResource(R.drawable.ic_keyboard_black_24dp)
+
+                appNameTextView?.visibility = View.GONE
+                searchEditText?.visibility = View.VISIBLE
+
                 containerLayout?.addView(bleepsView, 0)
+
+                retrieveBleeps()
             }
             is RecyclerView -> {
                 containerLayout?.removeView(bleepsView)
+
+                toggleBleepsViewButton?.setImageResource(R.drawable.ic_music_note_black_24dp)
+
+                searchEditText?.visibility = View.GONE
+                appNameTextView?.visibility = View.VISIBLE
+
                 containerLayout?.addView(keyboardView, 0)
             }
         }
+    }
 
+    private fun toggleBleepsSearch(searching: Boolean) {
+        when(searching) {
+            true -> {
+                val keyboardHeight = keyboardView?.height
+                val bleepsHeight = bleepsView?.height
+                val bleepsPaddingTop = bleepsView?.paddingTop
+
+                containerLayout?.removeView(bleepsView)
+
+                bleepsView?.layoutParams =
+                    keyboardHeight?.let { RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, it * 3 / 2) }
+                bleepsPaddingTop?.let { bleepsHeight?.let { it1 -> bleepsView?.setPadding(0, it, 0, it1) } }
+
+                val constraintSet = ConstraintSet()
+                constraintSet.clone(containerLayout)
+
+                containerLayout?.addView(keyboardView, 0)
+                containerLayout?.addView(bleepsView, 1)
+
+                bleepsView?.id?.let { keyboardView?.id?.let { it1 ->
+                    constraintSet.connect(it, ConstraintSet.BOTTOM,
+                        it1, ConstraintSet.TOP, 0)
+                } }
+                constraintSet.applyTo(containerLayout)
+            }
+            false -> {
+                containerLayout?.removeView(keyboardView)
+                containerLayout?.removeView(bleepsView)
+
+                bleepsView?.layoutParams =
+                    keyboardView?.height?.let { RecyclerView.LayoutParams(RecyclerView.LayoutParams.MATCH_PARENT, it) }
+
+                containerLayout?.addView(bleepsView, 0)
+
+                retrieveBleeps()
+            }
+        }
     }
 
     fun sendBleep(bleep: Bleep) {
@@ -206,6 +275,9 @@ class BleepInputMethodService : InputMethodService(), KeyboardView.OnKeyboardAct
                     KEYCODE_ENTER
                 )
             )
+
+            containerLayout?.removeView(bleepsView)
+            containerLayout?.addView(keyboardView, 0)
         }
     }
 

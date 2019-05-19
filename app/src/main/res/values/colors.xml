@@ -4,11 +4,14 @@
     <color name="colorPrimaryDark">#455A64</color>
     <color name="colorAccent">#03A9F4</color>
 
-    <color name="keyboardBackground">#E0E0E0</color>
+    <color name="containerBackground">#E0E0E0</color>
+
     <color name="normalKeyBackground">#FFFFFF</color>
     <color name="pressedKeyBackground">#C7C7C7</color>
     <color name="specialKeyBackground">#EEEEEE</color>
 
     <color name="keyText">#000000</color>
     <color name="specialKey">#616161</color>
+
+    <color name="searchBackground">#D8D8D8</color>
 </resources>

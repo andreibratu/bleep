@@ -1,10 +1,8 @@
 <resources>
     <string name="app_name">Bleep</string>
-    <string name="open_bleeps">Open bleeps</string>
+    <string name="toggle_bleeps_view">Toggle bleeps view</string>
     <string name="settings">Settings</string>
-    <string name="api_key">369db66db7504d78aaa55135e6b8d5c7</string>
-    <string name="api_url">https://api.rebrandly.com/v1/links</string>
-    <string name="api_workspace">3e2dcccf869b40c093298caed2239f57</string>
     <string name="bleep_icon">Bleep icon</string>
     <string name="welcome_to_bleep">Welcome to Bleep!</string>
+    <string name="search_bleeps">Search bleeps</string>
 </resources>
