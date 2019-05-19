@@ -276,6 +276,11 @@ class BleepInputMethodService : InputMethodService(), KeyboardView.OnKeyboardAct
                 )
             )
 
+            toggleBleepsViewButton?.setImageResource(R.drawable.ic_music_note_black_24dp)
+
+            searchEditText?.visibility = View.GONE
+            appNameTextView?.visibility = View.VISIBLE
+
             containerLayout?.removeView(bleepsView)
             containerLayout?.addView(keyboardView, 0)
         }
