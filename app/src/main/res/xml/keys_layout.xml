@@ -4,9 +4,6 @@
           android:horizontalGap="1.675%p"
           android:verticalGap="6dp"
           android:keyHeight="42dp">
-    <Row android:rowEdgeFlags="top">
-        <Key android:codes="-7" android:keyLabel="Upload bleep" android:keyWidth="95.625%p" android:horizontalGap="0dp"/>
-    </Row>
     <Row android:keyHeight="32dp">
         <Key android:codes="49" android:keyLabel="1" android:horizontalGap="0dp" android:keyEdgeFlags="left"/>
         <Key android:codes="50" android:keyLabel="2"/>

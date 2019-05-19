@@ -6,8 +6,9 @@
 
     <color name="keyboardBackground">#E0E0E0</color>
     <color name="normalKeyBackground">#FFFFFF</color>
-    <color name="pressedKeyBackground">#616161</color>
+    <color name="pressedKeyBackground">#C7C7C7</color>
     <color name="specialKeyBackground">#EEEEEE</color>
 
     <color name="keyText">#000000</color>
+    <color name="specialKey">#616161</color>
 </resources>
