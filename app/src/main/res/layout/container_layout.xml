@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:background="@color/containerBackground"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent">
+
+    <LinearLayout android:id="@+id/keyboardTopBar"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  app:layout_constraintTop_toTopOf="parent"
+                  app:layout_constraintStart_toStartOf="parent"
+                  app:layout_constraintEnd_toEndOf="parent"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="12dp"
+                  android:layout_marginEnd="12dp">
+
+        <ImageButton android:id="@+id/toggleBleepsViewButton"
+                     android:layout_width="32dp"
+                     android:layout_height="32dp"
+                     android:contentDescription="@string/toggle_bleeps_view"
+                     android:src="@drawable/ic_music_note_black_24dp"
+                     android:background="@drawable/round_button_background"/>
+
+        <TextView android:id="@+id/appNameTextView"
+                  android:layout_width="0dp"
+                  android:layout_height="32dp"
+                  android:text="@string/app_name"
+                  android:textSize="20sp"
+                  android:gravity="center"
+                  android:layout_weight="1"/>
+
+        <EditText android:id="@+id/searchEditText"
+                  android:layout_width="0dp"
+                  android:layout_height="32dp"
+                  android:background="@drawable/search_background"
+                  android:drawableStart="@drawable/ic_search_black_24dp"
+                  android:hint="@string/search_bleeps"
+                  android:imeOptions="actionSearch"
+                  android:inputType="text"
+                  android:lines="1"
+                  android:maxLines="1"
+                  android:autofillHints="tags"
+                  android:enabled="false"
+                  android:layout_weight="1"
+                  android:layout_marginStart="16dp"
+                  android:layout_marginEnd="16dp"
+                  android:paddingStart="8dp"
+                  android:paddingEnd="8dp"
+                  android:drawablePadding="8dp"
+                  android:visibility="gone"/>
+
+        <ImageButton android:id="@+id/settingsButton"
+                     android:layout_width="32dp"
+                     android:layout_height="32dp"
+                     android:contentDescription="@string/settings"
+                     android:src="@drawable/ic_settings_black_24dp"
+                     android:background="@drawable/round_button_background"/>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

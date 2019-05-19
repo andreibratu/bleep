@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "847190115185",
+    "firebase_url": "https://bleep-d93bf.firebaseio.com",
+    "project_id": "bleep-d93bf",
+    "storage_bucket": "bleep-d93bf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:847190115185:android:6e99f05bfc3f9c3a",
+        "android_client_info": {
+          "package_name": "com.broads.bleep"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "847190115185-1o3f8uqk7g1a55n4tttq1gacrcgcaq7a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdvaPHZ_nNQQ58mSxZsdTY9-qU1yKJzkc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "847190115185-1o3f8uqk7g1a55n4tttq1gacrcgcaq7a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
