@@ -6,12 +6,13 @@
                                          android:shadowColor="@android:color/transparent"
                                          android:background="@color/keyboardBackground"
                                          android:keyPreviewLayout="@layout/keyboard_preview"
+                                         android:keyPreviewHeight="64dp"
                                          android:keyBackground="@drawable/normal_key_background"
+                                         android:keyTextSize="20sp"
                                          android:keyTextColor="@color/keyText"
                                          android:paddingStart="7.75dp"
                                          android:paddingEnd="7.75dp"
-                                         android:paddingTop="6dp"
+                                         android:paddingTop="52dp"
                                          android:paddingBottom="32dp"
-                                         android:keyPreviewHeight="42dp"
                                          android:layout_alignParentBottom="true">
 </android.inputmethodservice.KeyboardView>

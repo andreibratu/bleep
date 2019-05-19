@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:background="@color/keyboardBackground"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent">
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="horizontal"
+                  app:layout_constraintTop_toTopOf="parent"
+                  app:layout_constraintStart_toStartOf="parent"
+                  app:layout_constraintEnd_toEndOf="parent"
+                  android:layout_marginTop="8dp"
+                  android:layout_marginStart="14dp"
+                  android:layout_marginEnd="14dp">
+
+        <ImageButton android:id="@+id/toggleBleepsViewButton"
+                     android:layout_width="32dp"
+                     android:layout_height="32dp"
+                     android:contentDescription="@string/open_bleeps"
+                     android:src="@drawable/ic_music_note_black_24dp"
+                     android:background="@drawable/round_button_background"/>
+
+        <TextView android:layout_width="0dp"
+                  android:layout_height="32dp"
+                  android:text="@string/app_name"
+                  android:textSize="18sp"
+                  android:gravity="center"
+                  android:layout_weight="1"/>
+
+        <ImageButton android:id="@+id/sendBleepButton"
+                     android:layout_width="32dp"
+                     android:layout_height="32dp"
+                     android:contentDescription="@string/settings"
+                     android:src="@drawable/ic_settings_black_24dp"
+                     android:background="@drawable/round_button_background"/>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

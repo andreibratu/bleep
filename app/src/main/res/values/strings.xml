@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Bleep</string>
+    <string name="open_bleeps">Open bleeps</string>
+    <string name="settings">Settings</string>
 </resources>
